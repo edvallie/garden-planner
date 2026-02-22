@@ -227,7 +227,7 @@
 @media print {
   @page {
     size: landscape;
-    margin: 0; /* no room for browser’s header/footer; turn off “Print headers and footers” in Firefox print dialog if they still appear */
+    margin: 0;
   }
 
   body {
@@ -245,22 +245,24 @@
 
   .print-page {
     margin: 0;
-    padding: 15mm 18mm;
+    padding: 15mm 18mm 10mm 18mm; /* smaller bottom padding = less bottom margin */
+    height: 210mm;
     min-height: 0;
+    box-sizing: border-box;
     box-shadow: none;
-    page-break-after: avoid; /* prevent browser from adding extra break after each section */
+    page-break-after: avoid;
   }
 
   .print-page:not(:first-child) {
     page-break-before: always;
   }
 
+  /* Content area: keep below ~195mm so bottom isn’t clipped by PDF (210mm − 15mm bottom buffer) */
   .title-page,
-  .month-page,
   .appendix-divider,
   .appendix-page {
     min-height: 0;
-    max-height: 180mm; /* cap at one landscape page so nothing spills to a blank */
+    max-height: 165mm;
     overflow: hidden;
   }
 
@@ -270,9 +272,8 @@
   }
 
   .appendix-page .appendix-body {
-    /* Keep under landscape content height (180mm) minus heading and buffer; 155mm ensures no overflow */
-    height: 155mm;
-    max-height: 155mm;
+    height: 140mm;
+    max-height: 140mm;
     gap: 0.1rem;
     display: flex;
     flex-direction: column;
@@ -283,10 +284,10 @@
     flex: 1;
   }
 
-  /* Keep each month on one page (landscape); shrink row heights to fit */
   .month-page {
     page-break-inside: avoid;
-    max-height: 180mm; /* one landscape page; 100vh can cause blank overflow in print */
+    max-height: 185mm; /* 210mm − 15mm top − 10mm bottom padding */
+    overflow: visible;
   }
 
   .month-page .month-heading {
